@@ -1,0 +1,50 @@
+Detalii implementare:
+   Pentru implementarea acestei aplicatii am pornit de la laboratorul de multi-
+plexare la care s-a adaugat interactiunea cu clientii udp. Pentru protocolul de
+comunicare cu clientii tcp am folosit structura msg_from_udp pentru a retine
+payloadul (continutul mesajului) ,tipul mesajului si numele topicului.Intrucat 
+se cereau si informatii despre clientii udp la o transmitere de topic am trimis
+un 2 senduri (unul cu informatii despre clientii udp cu tipul 4 si unul cu 
+topicul in sine).Pentru retinerea tuturor informatiilor necesare despre mesaje,
+clientii topicuri am folosit structuri de tip hashtable(pentru accesarea rapida).
+ 
+
+Implementare Server:
+ - notiunile de baza din laboratoarele de tcp , multiplexare si udp. (deschidere
+socketi,adaugarea descriptorilor necesari in multimele de citire etc.)
+ - hashtable client_ids ce face legatura dintre socket si id-ul corespunzator
+clientului.
+ - hashtable topics ce face legatura dintre un anumit topic si lista de clienti
+online.
+ - hashtable store_and_forward ce face legatura dintre un anumit topic si lista
+de clientii offline.(care au dat subscribe cu 1).
+ - hashtable upd_info ce face legatura din id-ul unui client si informatiile 
+despre clientul udp pe care le va primii cand se va reconecta.
+ - hashtable stock ce face legatura dintre id-ul clientului si mesajele pe care
+urmeaza sa le primeasca la reconectare ( au dat subscribe cu 1).
+ - functia de split executa parsarea comenzilor provenite de la clientii tcp
+ce poate fi "subscribe" sau "unsubscribe" fiind tratata corespunzator.
+ - primirea datelor de la udp se va face cu ajutorul structurii cu cele 3 campu-
+ri definite mai sus.(numar corespunzator de octeti pentru fieceare informatie).
+ - de la tastura poate primii comanda "exit" ce inchide serverul.
+
+
+Implementare Subscriber:
+ - notiunile de baza pentru tcp (socketi,descriptori de citire etc.)
+ - parsarea comenzilor de la tastatura ce pot fi "subscribe" "unsubscribe" sau
+"exit".
+ - trimiterea mesajelor comezilor corespunzatoarelor cu aceeasi structura unde
+comanda va reprezenta payloadul.
+ - functia display ce va afisa mesajul primit de la server in functie de tipul
+acestuia ( tipurile din enunt si in plus 4-informatiile clientilor udp si 5 
+pentru eventualele erori).
+
+
+Starea aplicatie si error handling  
+ - id de peste 10 caractere.
+ - unsubscribe la un canal ce nu a fost facut subscribe.
+ - conectarea cu un id deja folosit.
+ - aplicatie functionala si pentru mesajele online si cele cu store&forward 
+singura problema fiind cand un user se reconecteaza primind foarte multe mesaje
+cu delay 0.
+ 
